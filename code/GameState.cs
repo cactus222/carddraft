@@ -1,7 +1,8 @@
 enum GameState {
     PASSIVE,
-    DECLARE_SEARCH,
-    SEARCH,
+    VISIT,
+    SELL,
+    PURCHASE,
     CRAFT,
     ACTION,
     END_ROUND

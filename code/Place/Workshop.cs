@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-class Mine: Place {
+class Workshop: Place {
     //TOOD
     override public List<Card> generateCards(int count, bool includePromo, int round) {
         List<Card> cards = new List<Card>();
