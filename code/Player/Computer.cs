@@ -23,5 +23,9 @@ using System.Collections.Generic;
     override public void craft(Game g) {
         g.receiveCraftFinish(this);
     }
+
+    override public void action(Game g) {
+        g.receiveActionFinished(this);    
+    }
     
 }

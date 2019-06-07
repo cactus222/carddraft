@@ -7,6 +7,7 @@ class CostBuilder {
     List<Card> reqCards = new List<Card>();
     
     List<Card> consumedCards = new List<Card>();
+    bool promoteReq = false;
     public CostBuilder setRep(int rep) {
         this.rep = rep;
         return this;
@@ -30,7 +31,12 @@ class CostBuilder {
         return this;
     }
 
+    public CostBuilder setNeedsPromotion(bool b) {
+        this.promoteReq = b;
+        return this;
+    }
+
     public Cost build() {
-        return new Cost(rep, funds, reqSkills, reqCards, consumedCards);
+        return new Cost(rep, funds, reqSkills, reqCards, consumedCards, promoteReq);
     }
 }

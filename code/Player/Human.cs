@@ -16,4 +16,8 @@ using System.Collections.Generic;
     override public void craft(Game g) {
 
     }
+
+    override public void action(Game g) {
+        
+    }
 }

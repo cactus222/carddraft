@@ -5,7 +5,7 @@ abstract class Card {
         return 0;
     }
 
-    virtual public void play() {
+    virtual public void play(Game g) {
 
     }
 
