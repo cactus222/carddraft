@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-class WoodenStick: Card {
+public class WoodenStick: Card {
     // override public Cost getBaseCost() {
     //     return new CostBuilder().setFunds(1).build(); 
     // }

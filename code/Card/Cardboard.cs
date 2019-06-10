@@ -1,3 +1,3 @@
-class Cardboard: Card {
+public class Cardboard: Card {
 
 }

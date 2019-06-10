@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-abstract class Player {
+abstract public class Player {
     protected int morale;
     protected int reputation;
     protected int funds;

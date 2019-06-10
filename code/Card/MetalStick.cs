@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-class MetalStick: Card {
+public class MetalStick: Card {
     override public bool isCraftable() {
         return true;
     }

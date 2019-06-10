@@ -1,4 +1,4 @@
-class Marketing: Skill {
+public class Marketing: Skill {
     override public string getName() {
         return "Marketing";
     }

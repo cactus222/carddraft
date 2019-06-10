@@ -1,4 +1,4 @@
-class ClothCrafting: Skill {
+public class ClothCrafting: Skill {
     override public string getName() {
         return "Cloth Crafting";
     }

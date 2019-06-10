@@ -1,4 +1,4 @@
-class MetalWorking: Skill {
+public class MetalWorking: Skill {
     override public string getName() {
         return "Metal Working";
     }

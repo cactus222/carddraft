@@ -1,3 +1,3 @@
-class Paper: Card {
+public class Paper: Card {
 
 }

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
- class Human: Player {
+ public class Human: Player {
     
     public Human(Role r) :base(r) {
         

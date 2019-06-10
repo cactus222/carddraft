@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-abstract class Card {
+public abstract class Card {
 
     virtual public int getCoolDown() {
         return 0;
@@ -37,6 +37,10 @@ abstract class Card {
     }
     virtual public int getFundSell() {
         return 0;
+    }
+
+    public override string ToString() {
+        return this.GetType().Name;
     }
 
 }

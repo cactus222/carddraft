@@ -1,4 +1,4 @@
-class FiredGoal: Goal {
+public class FiredGoal: Goal {
     //TODO
     override public bool isComplete(Game g) {
         return false;

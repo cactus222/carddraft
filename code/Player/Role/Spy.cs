@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-class Spy: Role {
+public class Spy: Role {
     
     private List<Goal> goals;
     public Spy() {

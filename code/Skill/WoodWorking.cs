@@ -1,4 +1,4 @@
-class WoodWorking: Skill {
+public class WoodWorking: Skill {
     override public string getName() {
         return "Wood Working";
     }

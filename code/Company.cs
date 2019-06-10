@@ -1,4 +1,4 @@
-class Company {
+public class Company {
     int funds;
     
 }

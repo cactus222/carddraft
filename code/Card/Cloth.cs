@@ -1,3 +1,0 @@
-class Cloth: Card {
-
-}

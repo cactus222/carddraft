@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-class Document: Card {
+public class Document: Card {
 
     override public bool isCraftable() {
         return true;

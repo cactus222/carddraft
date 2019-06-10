@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-class Game {
+public class Game {
     
     private List<Player> players;
     private List<Player> lostPlayers;

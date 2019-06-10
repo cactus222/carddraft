@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-class Utils {
+public class Utils {
     public static string getCardListString(List<Card> cards) {
         string str = "";
         foreach (Card c in cards) {

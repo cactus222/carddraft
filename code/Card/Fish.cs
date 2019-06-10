@@ -1,3 +1,3 @@
-class Fish: Card {
+public class Fish: Card {
 
 }

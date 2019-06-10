@@ -1,3 +1,3 @@
-class Staples: Card {
+public class Staples: Card {
 
 }

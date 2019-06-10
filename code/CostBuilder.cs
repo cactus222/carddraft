@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-class CostBuilder {
+public class CostBuilder {
     int rep = 0;
     int funds = 0;
     List<Skill> reqSkills = new List<Skill>();
