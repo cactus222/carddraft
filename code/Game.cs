@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 public class Game {
-    
+
     private List<Player> players;
     private List<Player> lostPlayers;
 
@@ -20,9 +20,9 @@ public class Game {
     public Game() {
         players = new List<Player>();
         lostPlayers = new List<Player>();
-        // players.Add(new Human(new Spy()));
-        // for (int i = 1; i < Constants.NUM_PLAYERS; i++) {
-        for (int i = 0; i < Constants.NUM_PLAYERS; i++) {
+        players.Add(new Human(new Spy()));
+        for (int i = 1; i < Constants.NUM_PLAYERS; i++) {
+            // for (int i = 0; i < Constants.NUM_PLAYERS; i++) {
             players.Add(new Computer(new Spy()));
         }
         company = new Company();
@@ -65,6 +65,10 @@ public class Game {
         int index = getPlayerIndex(p);
         if (hasActed[index]) {
             Logger.logMessage("already bought");
+            return;
+        }
+        if (cards.Count + p.getHand().Count > Constants.MAX_HAND_SIZE) {
+            Logger.logMessage("cant be bigger than amx hand size");
             return;
         }
         List<Card> purchasable = new List<Card>(getPurchasableCards(p));
@@ -115,11 +119,16 @@ public class Game {
         }
     }
 
+    //TODO
+    public void contributeToGoal(Player p) {
+
+    }
+
     public List<Card> getPurchasableCards(Player p) {
         return purchaseableCards[getPlayerIndex(p)];
     }
 
-//TODO
+    //TODO
     public int getMaxPurchasableCardsCount(Player p) {
         return Constants.BASE_PURCHASE_COUNT;
     }
@@ -128,7 +137,7 @@ public class Game {
         //TODO
         if (canPlayerCraft(p, c)) {
             pay(p, c.getCraftCost());
-            p.addCardsToHand(new List<Card>(){c});
+            p.addCardsToHand(new List<Card>() { c });
         } else {
             Logger.logMessage("failed to craft");
         }
@@ -141,7 +150,7 @@ public class Game {
     }
 
     private bool canPlayerCraft(Player p, Card c) {
-        if (!c.isCraftable()){
+        if (!c.isCraftable()) {
             return false;
         }
         Cost cost = c.getCraftCost();
@@ -179,7 +188,7 @@ public class Game {
             return;
         }
         hasActed[index] = true;
-        if(hasAllActed()) {
+        if (hasAllActed()) {
             startActionPhase();
         }
     }
@@ -196,16 +205,18 @@ public class Game {
     public void receiveAction(Player p, Card c) {
         Logger.logMessage($"Received action from {getPlayerIndex(p)} {c}");
         //Playing card? or activating from board
-        
-        if(!c.isPlayable()){
+
+        if (!c.isPlayable(this, p)) {
+            Logger.logMessage($"Card is not playable {c}");
             return;
         }
 
-        if(!canPay(p, c.getPlayCost())) {
+        if (!canPay(p, c.getPlayCost())) {
+            Logger.logMessage($"Can't afford to pay for card {c}");
             return;
         }
 
-        c.play(this);
+        p.playCard(this, c);
     }
 
     public void receiveActionFinished(Player p) {
@@ -213,6 +224,10 @@ public class Game {
         int index = getPlayerIndex(p);
         hasActed[index] = true;
         requestPlayerAction();
+    }
+    //TODO
+    public Player getCurrentPlayer() {
+        return players[0];
     }
 
 
@@ -241,6 +256,7 @@ public class Game {
         foreach (Player player in players) {
             player.visit(this);
         }
+        logGameState();
     }
 
     private void endVisitPhase() {
@@ -259,16 +275,17 @@ public class Game {
     sell
      */
 
-     private void startSellPhase() {
+    private void startSellPhase() {
         state = GameState.SELL;
         hasActed = new bool[players.Count];
-         for (int i = 0; i < players.Count; i++) {
+        for (int i = 0; i < players.Count; i++) {
             Player player = players[i];
             player.sell(this);
         }
-     }
+        logGameState();
+    }
 
-    
+
     /*
     * Purchase
      */
@@ -282,6 +299,7 @@ public class Game {
             // List<Card> cards = purchaseableCards[i];
             player.purchase(this);
         }
+        logGameState();
     }
 
     private void endPurchaseRound() {
@@ -315,9 +333,10 @@ public class Game {
     private void startCraftPhase() {
         state = GameState.CRAFT;
         hasActed = new bool[players.Count];
-        foreach(Player p in players) {
+        foreach (Player p in players) {
             p.craft(this);
         }
+        logGameState();
     }
     /*
     ** action Phase
@@ -326,6 +345,7 @@ public class Game {
         state = GameState.ACTION;
         hasActed = new bool[players.Count];
         requestPlayerAction();
+        logGameState();
     }
 
     private void requestPlayerAction() {
@@ -349,7 +369,34 @@ public class Game {
         state = GameState.END_ROUND;
         //TODO salary etc.?
         //round bump
-        throw new System.Exception("wat");
+
+        foreach (Player p in players) {
+            p.addFunds(1);
+        }
+        day++;
+        if (day % 14 == 0) {
+            round++;
+            day = 0;
+        }
+        //TODO round/day etc. rotation + flip
         startPassivesPhase();
     }
+
+    private void logGameState() {
+        if (state == GameState.SELL) {
+            Logger.logMessage("sell");
+        } else if (state == GameState.PURCHASE) {
+            Logger.logMessage("purchase");
+            Logger.logMessage($"buy {Utils.getCardListString(getPurchasableCards(getCurrentPlayer()))}");
+        } else if (state == GameState.CRAFT) {
+            Logger.logMessage("craft");
+        } else if (state == GameState.ACTION) {
+            Logger.logMessage("action");
+        }
+
+
+        Logger.logMessage($"hand {Utils.getCardListString(getCurrentPlayer().getHand())}");
+        Logger.logMessage($"board {Utils.getCardListString(getCurrentPlayer().getBoard())}");
+    }
+
 }

@@ -13,6 +13,17 @@ abstract public class Player {
 
     bool promoted;
 
+    Skill learningSkill;
+    int timeLeft = 0;
+
+    public int getLearningTimeLeft() {
+        return timeLeft;
+    }
+
+    public Skill getLearningSkill() {
+        return learningSkill;
+    }
+
     protected Player(Role role) {
         morale = 10;
         board = new List<Card>();
@@ -22,6 +33,8 @@ abstract public class Player {
         funds = 100;
         this.role = role;
         promoted = false;
+        learningSkill = Skill.NONE;
+        timeLeft = 0;
     }
 
     public bool isPromoted() {
@@ -71,11 +84,31 @@ abstract public class Player {
     }
 
     public void removeCards(List<Card> cards) {
-        //TODO
+        foreach (Card c in cards) {
+            Logger.logMessage($"removed card {c}");
+            int index = board.IndexOf(c);
+            if (index != -1) {
+                board.RemoveAt(index);
+            } else {
+                hand.Remove(c);
+            }
+        }
     }
 
     public void addRep(int rep) {
         this.reputation += rep;
+    }
+
+    public void setLearningSkill(Skill s, int duration) {
+        this.timeLeft = duration;
+        this.learningSkill = s;
+    }
+
+    public void playCard(Game g, Card c){
+        c.play(g, this);
+        if (c.isConsumedOnPlay()) {
+            removeCards(new List<Card>(){c});
+        }
     }
 
 }

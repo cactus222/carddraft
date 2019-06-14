@@ -1,4 +1,14 @@
-abstract public class Skill {
-    public abstract string getName();
-    public abstract string getDesc();
+
+public enum Skill {
+    METAL_WORKING,
+    WELDING,
+    WOOD_WORKING,
+    CLOTH_CRAFTING,
+
+    
+    MARKETING,
+    COMMUNICATION,
+    LAW,
+    NONE
+
 }

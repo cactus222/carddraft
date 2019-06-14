@@ -11,7 +11,7 @@ public class WoodenStick: Card {
 
     override public Cost getCraftCost() {
         return new CostBuilder()
-            .setReqSkills(new List<Skill>{new WoodWorking()})
+            .setReqSkills(new List<Skill>{Skill.WOOD_WORKING})
             .setReqCards(new List<Card>{new Wood()})
             .setConsumedCards(new List<Card>{new Wood()})
             .build();

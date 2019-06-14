@@ -5,7 +5,7 @@ public abstract class Card {
         return 0;
     }
 
-    virtual public void play(Game g) {
+    virtual public void play(Game g, Player owner) {
 
     }
 
@@ -17,7 +17,7 @@ public abstract class Card {
         return true;
     }
 
-    virtual public bool isPlayable() {
+    virtual public bool isPlayable(Game g, Player owner) {
         return false;
     }
 

@@ -6,7 +6,7 @@ public class MetalStick: Card {
 
     override public Cost getCraftCost() {
         return new CostBuilder()
-            .setReqSkills(new List<Skill>{new MetalWorking()})
+            .setReqSkills(new List<Skill>{Skill.METAL_WORKING})
             .setReqCards(new List<Card>{new Metal()})
             .setConsumedCards(new List<Card>{new Metal()})
             .build();

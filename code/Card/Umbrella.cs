@@ -10,7 +10,7 @@ public class Umbrella: Card {
 
     override public Cost getCraftCost() {
         return new CostBuilder()
-            .setReqSkills(new List<Skill>{new ClothCrafting()})
+            .setReqSkills(new List<Skill>{Skill.CLOTH_CRAFTING})
             .setReqCards(new List<Card>{new WoodenStick(), new MetalStick(), new Clothh()})
             .setConsumedCards(new List<Card>{new WoodenStick(), new MetalStick(), new Clothh()})
             .build();
