@@ -23,6 +23,14 @@ public class Utils {
         return randomThing.randInt(low, high);
     }
 
+    public static string getListString<T>(List<T> stuff) {
+        string str = "";
+        foreach (T c in stuff) {
+            str += c.ToString() + " ";
+        }
+        return str;
+    }
+
     public static string getCardListString(List<Card> cards) {
         string str = "";
         foreach (Card c in cards) {

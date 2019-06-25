@@ -59,17 +59,21 @@ public class Game {
         }
     }
 
-    public void receivePurchase(Player p, List<Card> cards) {
+    public bool receivePurchase(Player p, List<Card> cards) {
         Logger.logMessage($"Received purchase from {getPlayerIndex(p)} {Utils.getCardListString(cards)}");
+        if (state != GameState.PURCHASE) {
+            Logger.logMessage("Cannot declare purchase while not in phase");
+            return false;
+        }
         //TODO check max hand size
         int index = getPlayerIndex(p);
         if (hasActed[index]) {
             Logger.logMessage("already bought");
-            return;
+            return false;
         }
         if (cards.Count + p.getHand().Count > Constants.MAX_HAND_SIZE) {
             Logger.logMessage("cant be bigger than amx hand size");
-            return;
+            return false;
         }
         List<Card> purchasable = new List<Card>(getPurchasableCards(p));
         int cost = 0;
@@ -77,7 +81,7 @@ public class Game {
             int cIndex = purchasable.IndexOf(c);
             if (cIndex == -1) {
                 Logger.logMessage("wdf this card wasnt buyable");
-                return;
+                return false;
             } else {
                 purchasable.RemoveAt(cIndex);
             }
@@ -87,16 +91,28 @@ public class Game {
         if (p.getFunds() > cost) {
             p.addFunds(-cost);
             p.addCardsToHand(cards);
+            List<Card> kitty = getPurchasableCards(p);
+            Logger.logMessage($"before {Utils.getListString(kitty)}");
+            foreach (Card c in cards) {
+                kitty.Remove(c);
+            }
+            Logger.logMessage($"after {Utils.getListString(kitty)}");
             hasActed[index] = true;
             if (hasAllActed()) {
                 endPurchaseRound();
             }
+            return true;
         } else {
             Logger.logMessage("failed purchase cant afford");
+            return false;
         }
     }
     public void receiveSell(Player p, List<Card> cards) {
         Logger.logMessage($"Received sell from {getPlayerIndex(p)} {Utils.getCardListString(cards)}");
+        if (state != GameState.SELL) {
+            Logger.logMessage("Cannot declare sell while not in phase");
+            return;
+        }
         int value = 0;
         if (Utils.hasAllCards(p.getAllCards(), cards)) {
             foreach (Card c in cards) {
@@ -134,6 +150,10 @@ public class Game {
     }
 
     public void receiveCraft(Player p, Card c) {
+        if (state != GameState.CRAFT) {
+            Logger.logMessage("Cannot declare craft while not in phase");
+            return;
+        }
         //TODO
         if (canPlayerCraft(p, c)) {
             pay(p, c.getCraftCost());
@@ -181,6 +201,10 @@ public class Game {
         return players.IndexOf(p);
     }
     public void receiveCraftFinish(Player p) {
+        if (state != GameState.CRAFT) {
+            Logger.logMessage("Cannot declare craft finished while not in phase");
+            return;
+        }
         Logger.logMessage($"Received craft finish from {getPlayerIndex(p)}");
         int index = getPlayerIndex(p);
         if (index == -1) {
@@ -203,6 +227,10 @@ public class Game {
     }
 
     public void receiveAction(Player p, Card c) {
+        if (state != GameState.ACTION) {
+            Logger.logMessage("Cannot declare action while not in phase");
+            return;
+        }
         Logger.logMessage($"Received action from {getPlayerIndex(p)} {c}");
         //Playing card? or activating from board
 
@@ -220,6 +248,10 @@ public class Game {
     }
 
     public void receiveActionFinished(Player p) {
+        if (state != GameState.ACTION) {
+            Logger.logMessage("Cannot declare action finished while not in phase");
+            return;
+        }
         Logger.logMessage($"Received action finish from {getPlayerIndex(p)}");
         int index = getPlayerIndex(p);
         hasActed[index] = true;
@@ -303,8 +335,8 @@ public class Game {
     }
 
     private void endPurchaseRound() {
-        Logger.logMessage("end purchase round");
         purchaseRound++;
+        Logger.logMessage("end purchase round " + purchaseRound  + " of " + (Constants.NUM_PLAYERS + 1) );
         if (purchaseRound == 1 + Constants.NUM_PLAYERS) {
             startCraftPhase();
             return;
@@ -315,8 +347,8 @@ public class Game {
         hasActed = new bool[numPeople];
         List<Card> cards = purchaseableCards[0];
         for (int i = 0; i < numPeople; i++) {
-            List<Card> nextCards = purchaseableCards[(i + numPeople) % numPeople];
-            purchaseableCards[(i + numPeople) % numPeople] = cards;
+            List<Card> nextCards = purchaseableCards[(i + numPeople + 1) % numPeople];
+            purchaseableCards[(i + numPeople + 1) % numPeople] = cards;
             cards = nextCards;
         }
         // get computers to act
@@ -325,6 +357,8 @@ public class Game {
             // List<Card> cards = purchaseableCards[i];
             player.purchase(this);
         }
+
+        logGameState();
     }
 
     /*
@@ -372,6 +406,7 @@ public class Game {
 
         foreach (Player p in players) {
             p.addFunds(1);
+            p.dayRotate();
         }
         day++;
         if (day % 14 == 0) {
@@ -382,6 +417,9 @@ public class Game {
         startPassivesPhase();
     }
 
+    private void logPhase() {
+        Logger.logMessage(state.ToString("G"));
+    }
     private void logGameState() {
         if (state == GameState.SELL) {
             Logger.logMessage("sell");
@@ -394,9 +432,12 @@ public class Game {
             Logger.logMessage("action");
         }
 
+        logPhase();
+        Logger.logMessage($"hand: {Utils.getCardListString(getCurrentPlayer().getHand())}");
+        Logger.logMessage($"board: {Utils.getCardListString(getCurrentPlayer().getBoard())}");
+        Logger.logMessage($"skills: {Utils.getListString(getCurrentPlayer().getSkills())}");
+        Logger.logMessage($"learning: {getCurrentPlayer().getLearningSkill()} , time left: {getCurrentPlayer().getLearningTimeLeft()}");
 
-        Logger.logMessage($"hand {Utils.getCardListString(getCurrentPlayer().getHand())}");
-        Logger.logMessage($"board {Utils.getCardListString(getCurrentPlayer().getBoard())}");
     }
 
 }

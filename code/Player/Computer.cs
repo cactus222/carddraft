@@ -11,9 +11,11 @@ using System.Collections.Generic;
     override public void purchase(Game g) {
         List<Card> cards = g.getPurchasableCards(this);
         int numCards = g.getMaxPurchasableCardsCount(this);
-        
+        // lets just do 1 to not crash.
         List<Card> purchase = cards.GetRange(0, numCards);
-        g.receivePurchase(this, purchase);
+        if(!g.receivePurchase(this, purchase)) {
+            g.receivePurchase(this, new List<Card>());
+        }
     }
 
     override  public void sell(Game g) {

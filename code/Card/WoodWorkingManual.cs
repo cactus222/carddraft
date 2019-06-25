@@ -6,7 +6,7 @@ public class WoodWorkingManual: Card {
     }
 
     override public void play(Game g, Player owner) {
-        owner.setLearningSkill(Skill.WOOD_WORKING, 2);
+        owner.setLearningSkill(Skill.WOOD_WORKING, 1);
     }
 
 }
