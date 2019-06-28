@@ -1,3 +1,3 @@
-class TheLawyers:Card {
+class Threaten:Card {
     
 }
